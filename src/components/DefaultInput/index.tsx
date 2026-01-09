@@ -13,7 +13,7 @@ export function DefaultInpunt({
 }: defaultInputProps) {
   return (
     <>
-      labelText && <label htmlFor={id}>{labelText}</label>
+      <label htmlFor={id}>{labelText}</label>
       <input className={styles.input} id={id} type={type} {...rest} />
     </>
   );
