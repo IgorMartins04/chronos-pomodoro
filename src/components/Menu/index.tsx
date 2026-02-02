@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import styles from "./styles.module.css";
 import { useEffect, useState } from "react";
+import { Link } from "react-router";
 
 type AvailableThemes = "dark" | "light";
 
@@ -23,7 +24,7 @@ export function Menu() {
   };
 
   function handleThemeChange(
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
   ) {
     event.preventDefault();
     setTheme((prevTheme) => {
@@ -42,14 +43,14 @@ export function Menu() {
 
   return (
     <nav className={styles.menu}>
-      <a
-        href="#"
+      <Link
+        to="/"
         className={styles.menuLink}
         aria-label="Ir para Home"
         title="Ir para Home"
       >
         <HouseIcon />
-      </a>
+      </Link>
       <a
         href="#"
         className={styles.menuLink}
