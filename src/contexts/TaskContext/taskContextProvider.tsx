@@ -6,13 +6,27 @@ import { TimerWorkerMenager } from "../../workers/TimerWorkerMenager";
 import { TaskActionTypes } from "./taskActions";
 import { LoadBeep } from "../../utils/loadBeep";
 import { showMessage } from "../../adapters/showMessage";
+import type { TaskStateModel } from "../../models/TaskStateModel";
 
 type TaskContextProviderProps = {
   children: React.ReactNode;
 };
 
 export function TaskContextProvider({ children }: TaskContextProviderProps) {
-  const [state, dispatch] = useReducer(taskReducer, initialTaskState);
+  const [state, dispatch] = useReducer(taskReducer, initialTaskState, () => {
+    const storageState = localStorage.getItem("state");
+
+    if (storageState === null) return initialTaskState;
+
+    const parsedStorageState = JSON.parse(storageState) as TaskStateModel;
+
+    return {
+      ...parsedStorageState,
+      activeTask: null,
+      secondsRemaining: 0,
+      formattedSecondsRemaining: "00:00",
+    };
+  });
   const worker = TimerWorkerMenager.getInstance();
   const playBeepRef = useRef<ReturnType<typeof LoadBeep> | null>(null);
 
@@ -39,8 +53,9 @@ export function TaskContextProvider({ children }: TaskContextProviderProps) {
   });
 
   useEffect(() => {
+    localStorage.setItem("state", JSON.stringify(state));
+
     if (!state.activeTask) {
-      console.log("worker terminado por falta de active task");
       worker.terminate();
     }
 
